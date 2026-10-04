@@ -1,0 +1,27 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor & IDE Files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.sublime-project
+*.sublime-workspace
+
+# Environment & Sensitive Files
+.env
+.env.local
+.env.*
+!.env.example
+
+# Temporary / Cache / Log Files
+*.log
+tmp/
+temp/

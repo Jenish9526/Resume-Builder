@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Builder - Dashboard</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Resume / CV Builder</h1>
+        <p>Manage your professional resumes</p>
+      </div>
+      <a class="btn primary" href="pages/resume_form.php">+ Create New Resume</a>
+    </header>
+
+    <main class="container">
+      <div class="page-title">
+        <h2>Saved Resumes</h2>
+        <span id="resumeCount">Loading resumes...</span>
+      </div>
+
+      <div id="resumeContainer">
+        <!-- Populated dynamically via JavaScript fetch() from api/get_resumes.php -->
+        <div style="text-align: center; padding: 40px; color: #667">
+          <p>Loading your resumes...</p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        loadResumes();
+      });
+
+      function loadResumes() {
+        const container = document.getElementById("resumeContainer");
+        const countSpan = document.getElementById("resumeCount");
+
+        fetch("api/get_resumes.php")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+          })
+          .then((result) => {
+            if (result.status !== "success" || !Array.isArray(result.data)) {
+              throw new Error("Invalid response format");
+            }
+
+            const resumes = result.data;
+            countSpan.textContent = resumes.length + " resume(s)";
+
+            if (resumes.length === 0) {
+              container.innerHTML = `
+                    <div class="empty-card">
+                        <h3>No resumes yet</h3>
+                        <p>Create your first professional resume.</p>
+                        <a class="btn primary" href="pages/resume_form.php">Create Resume</a>
+                    </div>
+                `;
+              return;
+            }
+
+            let cardsHtml = '<div class="resume-grid">';
+            resumes.forEach((resume) => {
+              const initial =
+                resume.name && resume.name.trim().length > 0
+                  ? escapeHTML(resume.name.trim().charAt(0).toUpperCase())
+                  : "R";
+
+              const photoHtml = `<div class="avatar">${initial}</div>`;
+
+              cardsHtml += `
+                    <article class="resume-card">
+                        <div class="card-photo">
+                            ${photoHtml}
+                        </div>
+                        <div class="card-body">
+                            <h3>${escapeHTML(resume.name || "Untitled")}</h3>
+                            <p>${escapeHTML(resume.email || "No email provided")}</p>
+                            <small>Template: ${escapeHTML(resume.template || "Standard")}</small>
+                            <small>Updated: ${escapeHTML(resume.updated_at || "-")}</small>
+                        </div>
+                        <div class="card-actions">
+                            <a class="btn small" href="pages/view_resume.php?id=${encodeURIComponent(resume.id)}">View</a>
+                            <a class="btn small" href="pages/resume_form.php?id=${encodeURIComponent(resume.id)}">Edit</a>
+                            <a class="btn small danger" 
+                               href="actions/delete_resume.php?id=${encodeURIComponent(resume.id)}" 
+                               onclick="return confirm('Delete this resume permanently?');">Delete</a>
+                        </div>
+                    </article>
+                `;
+            });
+            cardsHtml += "</div>";
+
+            container.innerHTML = cardsHtml;
+          })
+          .catch((err) => {
+            console.error("Error fetching resumes:", err);
+            countSpan.textContent = "Error loading";
+            container.innerHTML = `
+                <div class="empty-card" style="border: 1px solid #f5c6cb; background: #fff5f5;">
+                    <h3 style="color:#c0392b;">Could not load resumes</h3>
+                    <p>Make sure your local web server (Apache/PHP) and MySQL are running.</p>
+                    <p><small style="color:#777;">Details: ${escapeHTML(err.message)}</small></p>
+                    <button class="btn primary" onclick="loadResumes()">Try Again</button>
+                </div>
+            `;
+          });
+      }
+
+      function escapeHTML(str) {
+        if (str === null || str === undefined) return "";
+        return String(str).replace(
+          /[&<>"']/g,
+          (ch) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[ch],
+        );
+      }
+    </script>
+  </body>
+</html>
