@@ -75,6 +75,7 @@ This project explicitly satisfies and demonstrates all 5 core web technologies w
 - **Project Landing Page (`index.html`)**: Clean overview of the system with direct navigation to the dashboard and resume builder.
 - **Pure HTML & AJAX Dashboard (`pages/dashboard.html`)**: Fetches saved resumes from the database asynchronously using JavaScript's Fetch API (`api/get_resumes.php`), eliminating page reloads.
 - **Dynamic Form Repeater**: Easily add and remove multiple educational qualifications and project entries dynamically.
+- **Profile Photo Upload**: Upload a JPG, PNG, GIF, or WebP image up to 5 MB; it appears in the live preview, saved resume, and dashboard. Existing photos are retained when editing unless replaced or removed.
 - **Real-Time Live Preview**: Watch the resume update instantly in an A4-style preview pane as you type into form fields.
 - **Multiple CV Templates**: Switch between **Modern Blue**, **Creative Purple**, and **Classic Minimalist** layouts on the fly.
 - **Print & PDF Export**: Dedicated print styles strip browser toolbars and margins to generate clean, professional PDFs or printed documents.

@@ -34,7 +34,11 @@ if (!is_array($projects)) $projects = [];
 
   <div class="cv-header">
     <div class="cv-photo-wrap">
-      <div class="fallback-photo"><?php echo strtoupper(substr($data["name"] ?: "U", 0, 1)); ?></div>
+      <?php if (!empty($data["photo"])): ?>
+        <img class="profile-photo" src="../<?php echo htmlspecialchars($data["photo"], ENT_QUOTES, "UTF-8"); ?>" alt="Profile photo">
+      <?php else: ?>
+        <div class="fallback-photo"><?php echo strtoupper(substr($data["name"] ?: "U", 0, 1)); ?></div>
+      <?php endif; ?>
     </div>
 
     <div class="cv-head-text">

@@ -47,14 +47,51 @@ document.addEventListener("DOMContentLoaded", () => {
     photoInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      if (!file.type.startsWith("image/"))
-        return alert("Please select an image.");
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!allowedTypes.includes(file.type)) {
+        photoInput.value = "";
+        return alert("Please select a JPG, PNG, GIF, or WebP image.");
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        photoInput.value = "";
+        return alert("The photo must be 5 MB or smaller.");
+      }
       const reader = new FileReader();
       reader.onload = (ev) => {
         const previewPhoto = document.getElementById("previewPhoto");
-        if (previewPhoto) previewPhoto.src = ev.target.result;
+        const previewAvatar = document.getElementById("previewAvatar");
+        if (previewPhoto) {
+          previewPhoto.src = ev.target.result;
+          previewPhoto.style.display = "block";
+        }
+        if (previewAvatar) previewAvatar.style.display = "none";
       };
       reader.readAsDataURL(file);
+      const removePhoto = document.getElementById("removePhoto");
+      if (removePhoto) removePhoto.checked = false;
+    });
+  }
+
+  const removePhoto = document.getElementById("removePhoto");
+  if (removePhoto) {
+    const previewPhoto = document.getElementById("previewPhoto");
+    const previewAvatar = document.getElementById("previewAvatar");
+    const savedPhotoSrc = previewPhoto ? previewPhoto.getAttribute("src") : "";
+    removePhoto.addEventListener("change", () => {
+      if (removePhoto.checked) {
+        if (previewPhoto) {
+          previewPhoto.removeAttribute("src");
+          previewPhoto.style.display = "none";
+        }
+        if (previewAvatar) previewAvatar.style.display = "flex";
+        if (photoInput) photoInput.value = "";
+      } else if (savedPhotoSrc) {
+        if (previewPhoto) {
+          previewPhoto.src = savedPhotoSrc;
+          previewPhoto.style.display = "block";
+        }
+        if (previewAvatar) previewAvatar.style.display = "none";
+      }
     });
   }
 

@@ -71,7 +71,9 @@
                   ? escapeHTML(resume.name.trim().charAt(0).toUpperCase())
                   : "R";
 
-              const photoHtml = `<div class="avatar">${initial}</div>`;
+              const photoHtml = resume.photo
+                ? `<img src="${escapeHTML(resume.photo)}" alt="${escapeHTML(resume.name || "Profile photo")}">`
+                : `<div class="avatar">${initial}</div>`;
 
               cardsHtml += `
                     <article class="resume-card">

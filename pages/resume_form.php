@@ -47,13 +47,20 @@ if (!is_array($projects) || count($projects) === 0) {
 </header>
 
 <main class="builder">
-  <form id="resumeForm" class="form-panel" action="../actions/save_resume.php" method="POST">
+  <form id="resumeForm" class="form-panel" action="../actions/save_resume.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="id" value="<?php echo (int)$data["id"]; ?>">
 
     <section class="form-card">
       <h2>1. Personal Information</h2>
       <label>Full Name *</label>
       <input name="name" id="name" required value="<?php echo htmlspecialchars($data["name"]); ?>">
+
+      <label for="photo">Profile Photo</label>
+      <input type="file" name="photo" id="photo" accept="image/jpeg,image/png,image/gif,image/webp">
+      <p class="help">JPG, PNG, GIF, or WebP; maximum 5 MB.</p>
+      <?php if (!empty($data["photo"])): ?>
+      <label class="photo-remove"><input type="checkbox" name="remove_photo" id="removePhoto" value="1"> Remove current photo</label>
+      <?php endif; ?>
 
       <div class="two-col">
         <div><label>Phone</label><input name="phone" id="phone" value="<?php echo htmlspecialchars($data["phone"]); ?>"></div>
@@ -151,7 +158,8 @@ if (!is_array($projects) || count($projects) === 0) {
     <div id="resumePreview" class="resume <?php echo htmlspecialchars($data["template"]); ?>">
       <div class="cv-header">
         <div class="cv-photo-wrap">
-          <div class="fallback-photo" id="previewAvatar"><?php echo strtoupper(substr($data["name"] ?: "Y", 0, 1)); ?></div>
+          <img class="profile-photo" id="previewPhoto" src="<?php echo !empty($data["photo"]) ? "../" . htmlspecialchars($data["photo"], ENT_QUOTES, "UTF-8") : ""; ?>" alt="Profile photo" style="display:<?php echo !empty($data["photo"]) ? "block" : "none"; ?>">
+          <div class="fallback-photo" id="previewAvatar" style="display:<?php echo !empty($data["photo"]) ? "none" : "flex"; ?>"><?php echo strtoupper(substr($data["name"] ?: "Y", 0, 1)); ?></div>
         </div>
         <div class="cv-head-text">
           <h1 id="previewName"><?php echo htmlspecialchars($data["name"] ?: "Your Name"); ?></h1>

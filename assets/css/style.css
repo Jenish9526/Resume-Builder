@@ -234,6 +234,18 @@ textarea {
   object-fit: cover;
   border: 2px solid #555;
 }
+.profile-photo {
+  display: block;
+}
+.photo-remove {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: normal;
+}
+.photo-remove input {
+  width: auto;
+}
 .fallback-photo {
   display: flex;
   align-items: center;
